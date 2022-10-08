@@ -3,5 +3,6 @@ build:
 	jupyter-book build .
 	mkdir -p docs/
 	cp -r _build/html/* docs/
+	touch docs/.nojekyll
 
 .PHONY: build
