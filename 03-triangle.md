@@ -31,7 +31,7 @@ int main() {
 
 运行该程序我们就可以得到一个空心三角形。
 
-![Triangle Frame](03-triangle/triangle-frame.png)
+![Triangle Frame](assets/03-triangle/triangle-frame.png)
 
 ## 扫描线算法
 
@@ -41,7 +41,7 @@ int main() {
 
 第一步，我们将三角形切分为上下两部分。
 
-![Split Triangle](03-triangle/split-triangle.png)
+![Split Triangle](assets/03-triangle/split-triangle.png)
 
 如上图所示，红色的三角形被经过B点的水平线，分成了上下两部分。上部分三角形由线段AC，BC和水平线BD围成，下半部分三角形则由AC，AB和水平线BD围成。A，B，C三点的确定只需要根据三角形的三个端点的y坐标从低到高排序即可。
 
@@ -106,7 +106,7 @@ int main() {
 
 运行代码得到
 
-![Line Sweeping](03-triangle/line-sweeping.png)
+![Line Sweeping](assets/03-triangle/line-sweeping.png)
 
 ## 包围盒测试算法
 
@@ -114,7 +114,7 @@ int main() {
 
 我们用一张图片来解释包围盒测试：
 
-![Bounding Box](03-triangle/bounding-box.png)
+![Bounding Box](assets/03-triangle/bounding-box.png)
 
 如图所示，绿色的长方形是红色三角形的包围盒。包围盒是这样一个长方形，其长和宽于x轴和y轴平行，并且其刚刚好围住了内部的三角形。很显然，包围盒的最小或最大x值是三角形三个端点中最小或最大的x，同理y也是如此。
 
