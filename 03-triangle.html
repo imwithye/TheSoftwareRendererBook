@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>三角形绘制 &#8212; 软件光栅渲染器</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="线段绘制" href="02-line.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">软件光栅渲染器</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="README.html">
+                    软件光栅渲染器
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="00-preface.html">
+   前言
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="01-color.html">
+   颜色和着色器
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02-line.html">
+   线段绘制
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   三角形绘制
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/imwithye/TheSoftwareRendererBook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/imwithye/TheSoftwareRendererBook/issues/new?title=Issue%20on%20page%20%2F03-triangle.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/03-triangle.md"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.md</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   空心三角形渲染
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   扫描线算法
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   包围盒测试算法
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>三角形绘制</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id2">
+   空心三角形渲染
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   扫描线算法
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id4">
+   包围盒测试算法
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>三角形绘制<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p>本章节算法和代码引用了  Dmitry V. Sokolov 的 <a class="reference external" href="https://github.com/ssloy/tinyrenderer">tinyrenderer</a> 第二章三角形光栅化过程。在原算法的基础上，本章节做了整理、改进和重构。感谢 Dmitry V. Sokolov 将这一段算法整理成册，并开源地发布在 GitHub 供所有人使用。</p>
+</div></blockquote>
+<p>在上一章节中，我们描述了基本的线段绘制的算法。线段是所有直线，射线，以及曲线的基本构成单元。对于一条曲线来说，我们可以通过利用微积分的思想，将曲线转换为一条一条细小的线段，通过控制线段的数量来控制曲线的平滑精度。而对于一个曲面来说，我们则可以通过渲染无数个细小的三角形来拟合。</p>
+<p>我们在此章节中，将会探索在2D平面下的三角形渲染。在掌握了2D三角形渲染的方法以后，对于一个立体的3D图形，无非通过投影变换将三维空间转换为二维平面，然后重复这个渲染过程。</p>
+<section id="id2">
+<h2>空心三角形渲染<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
+<p>我们已经利用Bresenham算法实现了<code class="docutils literal notranslate"><span class="pre">DrawLine</span></code>函数，对于空心三角形的绘制，无非是三角形三个端点使用<code class="docutils literal notranslate"><span class="pre">DrawLine</span></code>进行三次线段绘制。</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">DrawTriangleFrame</span><span class="p">(</span><span class="n">Image</span><span class="w"> </span><span class="o">&amp;</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"></span>
+<span class="w">                       </span><span class="n">Color</span><span class="w"> </span><span class="n">color</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawLine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawLine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawLine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="p">);</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Image</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawTriangleFrame</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.6f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">),</span><span class="w"></span>
+<span class="w">                    </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.3f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Red</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawTriangleFrame</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.1f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.8f</span><span class="p">),</span><span class="w"></span>
+<span class="w">                    </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Green</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="n">img</span><span class="p">.</span><span class="n">SaveAsPNG</span><span class="p">(</span><span class="s">&quot;triangle-frame.png&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>运行该程序我们就可以得到一个空心三角形。</p>
+<p><img alt="Triangle Frame" src="03-triangle/triangle-frame.png" /></p>
+</section>
+<section id="id3">
+<h2>扫描线算法<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
+<p>通过线段绘制的办法，我们已经得到了一个空心的三角形。而对于实心三角形来说，一个朴素的想法是，我们从下至上，如同填色一样，一条线一条线的补全颜色，直到绘制完成整个三角形。</p>
+<p>由于我们不断的在三角形内部从左至右扫描并填，这个算法被称之为扫描线算法。现在让我们来讨论扫描线算法的实现细节。</p>
+<p>第一步，我们将三角形切分为上下两部分。</p>
+<p><img alt="Split Triangle" src="03-triangle/split-triangle.png" /></p>
+<p>如上图所示，红色的三角形被经过B点的水平线，分成了上下两部分。上部分三角形由线段AC，BC和水平线BD围成，下半部分三角形则由AC，AB和水平线BD围成。A，B，C三点的确定只需要根据三角形的三个端点的y坐标从低到高排序即可。</p>
+<p>如果A和B处于同一水平线，y值相等，那么我们可以认为其下半部分ABD（或上半部分BDC）为空三角形，而只存在上半部分（或下半部分）三角形。</p>
+<p>经过如此切分以后，三角形的三条线段的方程都是已知的。那么我们关注三角形ABD，我们下往上，在线段AD上寻找一个点，然后做水平线，与AB相交，这条线段即我们的扫描线。这根扫描线明显处于三角形内部，那么我们把其经过的所有像素着色即可。</p>
+<p>我们用C++代码来表述这一过程：</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// 已知线段的两个端点，当一个点在线段上，并已知其y值，求x值</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">SolveLineX</span><span class="p">(</span><span class="n">Vector2i</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2i</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// p1.y和p2.y应不相等，我们在扫描线循环中，规避了相等情况</span>
+<span class="w">  </span><span class="n">assert</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">p2</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">DrawTriangle</span><span class="p">(</span><span class="n">Image</span><span class="w"> </span><span class="o">&amp;</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="n">Color</span><span class="w"> </span><span class="n">color</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// 将屏幕坐标转换到像素空间</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">p1i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Width</span><span class="p">(),</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Height</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">p2i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Width</span><span class="p">(),</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Height</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">p3i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Width</span><span class="p">(),</span><span class="w"> </span><span class="n">p3</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Height</span><span class="p">());</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// 将三角形三个坐标按y轴从低到高排序</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p1i</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">p2i</span><span class="p">.</span><span class="n">y</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p2i</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p1i</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">p3i</span><span class="p">.</span><span class="n">y</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p2i</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">p3i</span><span class="p">.</span><span class="n">y</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">p2i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// 扫描下半部分三角形，如果三角形水平，p1i.y == p2i.y</span>
+<span class="w">  </span><span class="c1">// 则该循环被跳过</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p1i</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">p2i</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">xMin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SolveLineX</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">xMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SolveLineX</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p2i</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">DrawLine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">xMax</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">),</span><span class="w"> </span><span class="n">color</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// 扫描上半部分三角形，如果三角形水平，p2i.y == p3i.y</span>
+<span class="w">  </span><span class="c1">// 则该循环被跳过</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p2i</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">p3i</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">xMin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SolveLineX</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">xMax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SolveLineX</span><span class="p">(</span><span class="n">p2i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="n">DrawLine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">xMin</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">xMax</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">),</span><span class="w"> </span><span class="n">color</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Image</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawTriangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.6f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.3f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Red</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawTriangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.1f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.8f</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Green</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="n">img</span><span class="p">.</span><span class="n">SaveAsPNG</span><span class="p">(</span><span class="s">&quot;line-sweeping.png&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>运行代码得到</p>
+<p><img alt="Line Sweeping" src="03-triangle/line-sweeping.png" /></p>
+</section>
+<section id="id4">
+<h2>包围盒测试算法<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
+<p>扫描线算法是一个非常老牌的算法，其不仅用于三角形绘制，同时还被大量应用于计算几何中。扫描线算法被大量应用于曾经的单线程CPU架构中，然而随着GPU的发展，带来了数千GPU线程同时绘制图形的方案，一个更适合多线程的包围盒测试算法应运而生。</p>
+<p>我们用一张图片来解释包围盒测试：</p>
+<p><img alt="Bounding Box" src="03-triangle/bounding-box.png" /></p>
+<p>如图所示，绿色的长方形是红色三角形的包围盒。包围盒是这样一个长方形，其长和宽于x轴和y轴平行，并且其刚刚好围住了内部的三角形。很显然，包围盒的最小或最大x值是三角形三个端点中最小或最大的x，同理y也是如此。</p>
+<p>如果一个点处于包围盒之外，很显然它一定处于三角形之外。而一个处于包围盒之内的点，则有可能出现在三角形之内（B点），或出现在三角形之外（A点）。</p>
+<p>因此，我们仅仅只需遍历包围盒中的所有像素，并测试其是否在三角形之内，如果之内，则着色，否则则跳过该像素。</p>
+<p>用C++代码表述如下：</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">DrawTriangle</span><span class="p">(</span><span class="n">Image</span><span class="w"> </span><span class="o">&amp;</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p1</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p2</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="w"> </span><span class="n">p3</span><span class="p">,</span><span class="w"></span>
+<span class="w">                  </span><span class="n">Color</span><span class="w"> </span><span class="n">color</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="c1">// 将屏幕坐标转换到像素空间</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">p1i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Width</span><span class="p">(),</span><span class="w"> </span><span class="n">p1</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Height</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">p2i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Width</span><span class="p">(),</span><span class="w"> </span><span class="n">p2</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Height</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">p3i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Width</span><span class="p">(),</span><span class="w"> </span><span class="n">p3</span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">img</span><span class="p">.</span><span class="n">Height</span><span class="p">());</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// 找到包围盒左下和右上两个端点</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BBoxMin</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p2i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BBoxMax</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p2i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">);</span><span class="w"></span>
+
+<span class="w">  </span><span class="c1">// 循环包围盒内所有像素，并测试是否在三角形内</span>
+<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">max</span><span class="p">.</span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">++</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">max</span><span class="p">.</span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">IsInsideTriangle</span><span class="p">(</span><span class="n">p1i</span><span class="p">,</span><span class="w"> </span><span class="n">p2i</span><span class="p">,</span><span class="w"> </span><span class="n">p3i</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2i</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"></span>
+<span class="w">        </span><span class="k">continue</span><span class="p">;</span><span class="w"></span>
+<span class="w">      </span><span class="n">img</span><span class="p">.</span><span class="n">SetColor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="p">);</span><span class="w"></span>
+<span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">img</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Image</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawTriangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.6f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.3f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.6f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Red</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="n">DrawTriangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.1f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.8f</span><span class="p">),</span><span class="w"></span>
+<span class="w">               </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.9f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Green</span><span class="p">());</span><span class="w"></span>
+<span class="w">  </span><span class="n">img</span><span class="p">.</span><span class="n">SaveAsPNG</span><span class="p">(</span><span class="s">&quot;bbox.png&quot;</span><span class="p">);</span><span class="w"></span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="02-line.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">线段绘制</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Yiwei Gong<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
