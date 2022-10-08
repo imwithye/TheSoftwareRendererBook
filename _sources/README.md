@@ -1,5 +1,9 @@
 # 软件光栅渲染器
 
+[![Jupyter Book Badge](https://jupyterbook.org/badge.svg)](https://github.com/imwithye/TheSoftwareRendererBook)
+
+本作本基于 [Jupyter Book](https://jupyterbook.org/) 创作和排版。
+
 ## 授权和协议
 
 本作品基于 [Attribution-ShareAlike 4.0 International，CC-BY-SA-4.0](https://creativecommons.org/licenses/by-sa/4.0/) 协议授权。
