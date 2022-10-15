@@ -425,9 +425,13 @@ title="Print to PDF"
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 
 <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
-<span class="n">pixels</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/01-color_2_0.png" src="_images/01-color_2_0.png" />
 </div>
 </div>
 <p>上述语句生成了简单的黑色背景图片，现在我们将其转换成红色。</p>
@@ -435,9 +439,9 @@ title="Print to PDF"
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
   <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-    <span class="n">pixels</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
 
-<span class="n">display</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -462,13 +466,13 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
-<span class="n">pixels</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
   <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
-    <span class="n">pixels</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">pixel_color</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="n">y</span><span class="o">/</span><span class="n">h</span><span class="p">))</span>
+    <span class="n">image</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">pixel_color</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="n">y</span><span class="o">/</span><span class="n">h</span><span class="p">))</span>
 
-<span class="n">display</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -476,6 +480,31 @@ title="Print to PDF"
 <img alt="_images/01-color_9_0.png" src="_images/01-color_9_0.png" />
 </div>
 </div>
+<p>值得注意的是<code class="docutils literal notranslate"><span class="pre">pixel_color</span></code>函数，它仅仅绘制了一个像素的颜色，而不关心周围像素的绘制情况。我们可以很好的利用并行处理的方式来对每一个像素并行计算颜色并绘制。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">pixel_color</span><span class="p">(</span><span class="n">uv</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+<span class="n">coords</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">//</span><span class="n">h</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="n">i</span><span class="o">%</span><span class="k">h</span>/h) for i in range(w * h)]
+<span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+  <span class="n">pixels</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pixel_color</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
+  <span class="n">image</span><span class="o">.</span><span class="n">putdata</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/01-color_11_0.png" src="_images/01-color_11_0.png" />
+</div>
+</div>
+<p>我们这里利用<code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>库创建多线程任务，并行绘制了同一张图片。<code class="docutils literal notranslate"><span class="pre">pixel_color</span></code>我们称之为像素着色器，在 GPU 上，正是借助了 GPU 并行计算的能力，成千上万的像素着色器在同步执行，这也是 GPU 能快速绘制图片的原因。</p>
 </section>
 <section id="id3">
 <h2>像素着色器的魔法<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
