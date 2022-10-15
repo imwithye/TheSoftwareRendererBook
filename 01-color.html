@@ -50,8 +50,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="线段绘制" href="02-line.html" />
@@ -187,6 +185,35 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/imwithye/TheSoftwareRendererBook/master?urlpath=tree/01-color.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -254,7 +281,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/01-color.md"
+        <a href="_sources/01-color.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -265,7 +292,7 @@ title="Download source file"
 <span class="headerbtn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.md</span>
+<span class="headerbtn__text-container">.ipynb</span>
 </a>
 
       </li>
@@ -314,8 +341,8 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#c">
-   第一个实验：C++生成单颜色图片
+  <a class="reference internal nav-link" href="#python">
+   第一个实验：Python 生成单颜色图片
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -353,8 +380,8 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#c">
-   第一个实验：C++生成单颜色图片
+  <a class="reference internal nav-link" href="#python">
+   第一个实验：Python 生成单颜色图片
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -388,124 +415,71 @@ title="Print to PDF"
 <p>大多数人对于图片的概念，不过是电脑上的 JPG 和 PNG 文件。如果使用 Photoshop 之类的软件打开任何一张图片，就会发现图片由一组带颜色的小格子构成，每一个格子称之为像素。对于每一个像素来言，一般来说由三种颜色构成，或者称为三个通道，即红绿蓝通道。每一个通道的取值均为<code class="docutils literal notranslate"><span class="pre">[0,1]</span></code>。对于一些半透明的图片来说，还会引入第四个通道，即透明通道。同样透明通道的的取值范围也是<code class="docutils literal notranslate"><span class="pre">[0,1]</span></code>。</p>
 <p>如果一个像素的颜色为<code class="docutils literal notranslate"><span class="pre">(1,0,0,1)</span></code>，像素的四个通道一般情况以<code class="docutils literal notranslate"><span class="pre">RGBA</span></code>的顺序排列，那么很显然这个像素为红色。同样的，如果是<code class="docutils literal notranslate"><span class="pre">(1,1,0,1)</span></code>，那么该像素呈现红色和绿色的混合颜色黄色。</p>
 <p>对于每一个像素来说，由于<code class="docutils literal notranslate"><span class="pre">[0,1]</span></code>是一个浮点数，如果我们单纯使用单精度浮点类型<code class="docutils literal notranslate"><span class="pre">float</span></code>进行存储，对于一个包含 RGBA 四通道的像素来说，其大小为 128 个bit，即 16 个 byte。对于一张 1920x1080 分辨率的图片来说，这需要 33177600 个byte，相当于 32MB 的大小。事实上，人眼分辨颜色的能力是有限的，如果我们仅仅使用 8 个 bit 来表示一个通道，那么对于每个通道我们将会获得 256 种颜色。红色，绿色，蓝色的混合可以得到 256x256x256，大约一千六百万种颜色。8 bit 相对 32 bit，每个像素仅仅需要 4 个 byte 即可存储，通过一些合适的压缩算法，我们就能将一张 1920x1080 分辨率的图片合理压缩到 2 ~ 3MB 的大小。</p>
-<p>因此，绝大部分的图片和颜色都采用 8 bit 的方式来存储。由于 8 bit 刚好可以用<code class="docutils literal notranslate"><span class="pre">[0,255]</span></code>区间的整数或者是两个 16 进制数表示，很多程序，比如 HTML，就会使用 16 进制颜色编码来，例如<code class="docutils literal notranslate"><span class="pre">#2980b9ff</span></code>，来表示颜色。在 C 语言中，我们则可以使用<code class="docutils literal notranslate"><span class="pre">char</span></code>类型来表示一个通道的数值。</p>
-<section id="c">
-<h2>第一个实验：C++生成单颜色图片<a class="headerlink" href="#c" title="Permalink to this headline">#</a></h2>
-<p>有了对图片和像素的基本了解，我们不妨在 C++ 做一个小实验来生成一张只有颜色的图片。</p>
-<p>既然要生成图片，首先我们要考虑图片的格式。对于绝大多数的图片格式来说，其像素都是由一个一维数组构成。其数组的长度等于图片的宽度乘以图片的高度乘以每个像素的通道数量，即：</p>
-<div class="math notranslate nohighlight">
-\[
-len = width * height * channels
-\]</div>
-<p>​<code class="docutils literal notranslate"><span class="pre">stb</span></code>是一个小巧的 C++ 头文件库，提供了基础图片格式的读写操作。我们可以通过 GitHub 获取，<a class="reference external" href="https://github.com/nothings/stb/blob/master/stb%5C_image%5C_write.h">https://github.com/nothings/stb/blob/master/stb_image_write.h</a>。</p>
-<p>在此，我们将使用<code class="docutils literal notranslate"><span class="pre">stbi_write_png(char</span> <span class="pre">const</span> <span class="pre">*filename,</span> <span class="pre">int</span> <span class="pre">w,</span> <span class="pre">int</span> <span class="pre">h,</span> <span class="pre">int</span> <span class="pre">comp,</span> <span class="pre">const</span> <span class="pre">void</span> <span class="pre">*data,</span> <span class="pre">int</span> <span class="pre">stride_in_bytes)</span></code>函数将我们的图片数据保存为PNG格式。</p>
-<p><code class="docutils literal notranslate"><span class="pre">stbi_write_png</span></code>函数由六个参数构成，第一个参数是文件路径，第二和第三个参数是图片的宽度和高度。第四个参数表示图片数据的通道数量。由于不需要使用透明通道，因此三通道图片即可满足要求。第五个参数表示图片数据。由于我们的图片数据是一个一维数组，<code class="docutils literal notranslate"><span class="pre">stride_in_bytes</span></code>则表示每行的像素数据的长度。</p>
-<p>了解了<code class="docutils literal notranslate"><span class="pre">stbi_write_png</span></code>函数的参数，在我们的例子中，我们可以将其简化为<code class="docutils literal notranslate"><span class="pre">stbi_write_png(char</span> <span class="pre">const</span> <span class="pre">*filename,</span> <span class="pre">int</span> <span class="pre">w,</span> <span class="pre">int</span> <span class="pre">h,</span> <span class="pre">3,</span> <span class="pre">const</span> <span class="pre">void</span> <span class="pre">*data,</span> <span class="pre">w*3)</span></code>。</p>
-<p>下面关注数据部分。我们只需要生成一张不透明的颜色图，假定其为 200x200 分辨率，同时使用 8 bit 颜色格式。因此，我们只需要声明一段像素数组：</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="n">pixels</span><span class="p">[</span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">200</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="p">];</span><span class="w"></span>
+<p>因此，绝大部分的图片和颜色都采用 8 bit 的方式来存储。由于 8 bit 刚好可以用<code class="docutils literal notranslate"><span class="pre">[0,255]</span></code>区间的整数或者是两个 16 进制数表示，很多程序，比如 HTML，就会使用 16 进制颜色编码来，例如<code class="docutils literal notranslate"><span class="pre">#2980b9ff</span></code>，来表示颜色。在 Python 中，我们可以使用<code class="docutils literal notranslate"><span class="pre">(r,g,b,a)</span></code>来表示一个颜色，其中每一位的取值范围为<code class="docutils literal notranslate"><span class="pre">[0,255]</span></code>。</p>
+<section id="python">
+<h2>第一个实验：Python 生成单颜色图片<a class="headerlink" href="#python" title="Permalink to this headline">#</a></h2>
+<p>有了对图片和像素的基本了解，我们不妨在 Python 做一个小实验来生成一张只有颜色的图片。</p>
+<p>既然要生成图片，首先我们要考虑图片的格式。我们使用 Python 中的图像处理模块 Pillow 来创建和修改图片。我们可以如此简单的定义我们的图片：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>最后我们将其组装在一起，得到我们的第一个小程序：</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// single-color.cpp</span>
+</div>
+</div>
+<p>上述语句生成了简单的黑色背景图片，现在我们将其转换成红色。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="n">pixels</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
 
-<span class="c1">// This line is required for stb image library</span>
-<span class="cp">#define STB_IMAGE_WRITE_IMPLEMENTATION</span>
-<span class="cp">#define STB_IMAGE_WRITE_STATIC</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stb/stb_image_write.h&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
-
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">pixels</span><span class="p">[</span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">];</span><span class="w"></span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">w</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">++</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">h</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="n">pixels</span><span class="p">[(</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="mi">255</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="n">pixels</span><span class="p">[(</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="n">pixels</span><span class="p">[(</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-
-<span class="w">  </span><span class="n">stbi_write_png</span><span class="p">(</span><span class="s">&quot;single-color.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">pixels</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
+<span class="n">display</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>我们编译并运行该程序，即可获得一张名为<code class="docutils literal notranslate"><span class="pre">single_color.png</span></code>的红色图片。</p>
-<p><img alt="Single Color" src="_images/single-color.png" /></p>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/01-color_4_0.png" src="_images/01-color_4_0.png" />
+</div>
+</div>
 <p>接下来，我们将在这个基础上，做一些简单的调整，让我们输出的图片更加的漂亮。</p>
 </section>
 <section id="id2">
 <h2>第二个实验：屏幕空间坐标和着色器<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
-<p>在第一个实验中，我们通过设置像素数组的数值来实现输出颜色的目的。我们不妨把程序做一个稍稍的整理。</p>
-<p>首先是颜色，由于每一个像素都由三个通道构成，我们可以如此定义颜色：</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">Color</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">r</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">g</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
+<p>首先，我们再将生成颜色的代码整理成一个函数，以便我们更好的控制颜色的生成过程。该函数传入两个参数，分别是<code class="docutils literal notranslate"><span class="pre">u</span></code>和<code class="docutils literal notranslate"><span class="pre">v</span></code>。<code class="docutils literal notranslate"><span class="pre">uv</span></code>的取值范围为<code class="docutils literal notranslate"><span class="pre">[0,1]</span></code>，图片的左上角为<code class="docutils literal notranslate"><span class="pre">(0,0)</span></code>，图片的右下角为<code class="docutils literal notranslate"><span class="pre">(1,1)</span></code>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">pixel_color</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>那么我们像素数组即变成:</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Color</span><span class="w"> </span><span class="n">pixels</span><span class="p">[</span><span class="n">width</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">height</span><span class="p">];</span><span class="w"></span>
+</div>
+</div>
+<p>我们将此着色函数重新应用到我们的绘制过程中：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">h</span><span class="p">):</span>
+    <span class="n">pixels</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">pixel_color</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">w</span><span class="p">,</span> <span class="n">y</span><span class="o">/</span><span class="n">h</span><span class="p">))</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>得益于 C++ 的特性，虽然我们增加了<code class="docutils literal notranslate"><span class="pre">Color</span></code>类型，但数据在内存排布上和之前的数组则没有任何差别。</p>
-<p>我们再将生成颜色的代码整理成一个函数，以便我们更好的控制颜色的生成过程。</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Color</span><span class="w"> </span><span class="nf">PixelColor</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">height</span><span class="p">);</span><span class="w"></span>
-</pre></div>
 </div>
-<p>这里我们注意到，我们需要传递四个参数。然而在渲染过程中，我们大多只关心渲染的结果，而忽略渲染输出的分辨率。同一张图片，只要长宽比相同，1080P 和 4K 应该仅仅只有清晰度的区别，而不会有任何内容上的不同。</p>
-<p>对此，我们可以将<code class="docutils literal notranslate"><span class="pre">PixelColor</span></code>函数做一个简单的简化：</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Color</span><span class="w"> </span><span class="nf">PixelColor</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">v</span><span class="p">);</span><span class="w"></span>
-</pre></div>
+<div class="cell_output docutils container">
+<img alt="_images/01-color_9_0.png" src="_images/01-color_9_0.png" />
 </div>
-<p>其中<code class="docutils literal notranslate"><span class="pre">u</span> <span class="pre">=</span> <span class="pre">x/(float)width</span></code>，<code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">=</span> <span class="pre">y/(float)height</span></code>。经过此变换，一个像素的颜色仅仅只和这个像素在屏幕上的位置相关，和屏幕的分辨率的大小不相关。</p>
-<p>最后，我们将这些组件拼装在一起，并生成一张具有渐变颜色的图片。</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// gradient-color.cpp</span>
-
-<span class="c1">// This line is required for stb image library</span>
-<span class="cp">#define STB_IMAGE_WRITE_IMPLEMENTATION</span>
-<span class="cp">#define STB_IMAGE_WRITE_STATIC</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stb/stb_image_write.h&gt;</span><span class="cp"></span>
-
-<span class="k">struct</span><span class="w"> </span><span class="nc">Color</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">r</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">g</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">char</span><span class="w"> </span><span class="n">b</span><span class="p">;</span><span class="w"></span>
-<span class="p">};</span><span class="w"></span>
-
-<span class="n">Color</span><span class="w"> </span><span class="nf">PixelColor</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="n">Color</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="n">c</span><span class="p">.</span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">u</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="n">c</span><span class="p">.</span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="p">)(</span><span class="n">v</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="n">c</span><span class="p">.</span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">c</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-
-<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">;</span><span class="w"></span>
-<span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span><span class="w"></span>
-
-<span class="w">  </span><span class="n">Color</span><span class="w"> </span><span class="n">pixels</span><span class="p">[</span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="p">];</span><span class="w"></span>
-<span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">w</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="o">++</span><span class="p">)</span><span class="w"></span>
-<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">h</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">w</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="k">auto</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">h</span><span class="p">;</span><span class="w"></span>
-<span class="w">      </span><span class="n">pixels</span><span class="p">[</span><span class="n">y</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">x</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PixelColor</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">);</span><span class="w"></span>
-<span class="w">    </span><span class="p">}</span><span class="w"></span>
-
-<span class="w">  </span><span class="n">stbi_write_png</span><span class="p">(</span><span class="s">&quot;gradient-color.png&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">h</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">pixels</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span><span class="w"></span>
-<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="p">}</span><span class="w"></span>
-</pre></div>
 </div>
-<p><img alt="Gradient Color" src="_images/gradient-color.png" /></p>
 </section>
 <section id="id3">
 <h2>像素着色器的魔法<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
-<p>虽然我们的程序很短，实际上我们已经实现了一个完整的像素着色的过程。仅仅依赖于像素着色器，和GPU的并行计算的优势，我们就可以创建无数优美的图画。</p>
+<p>虽然我们的程序很短，实际上我们已经实现了一个完整的像素着色的过程。仅仅依赖于像素着色器，和 GPU 的并行计算的优势，我们就可以创建无数优美的图画。</p>
 <p><a class="reference external" href="https://www.shadertoy.com/">ShaderToy</a> 是一家专注于发布和分享像素着色器的平台。无数的艺术家、程序员在上面创建了各种魔法般的图案。</p>
 <p><img alt="Shadertoy" src="_images/shadertoy.png" /></p>
 <p>图片来自 <a class="reference external" href="https://www.shadertoy.com/view/ltfXzj">https://www.shadertoy.com/view/ltfXzj</a></p>
