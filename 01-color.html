@@ -484,7 +484,7 @@ title="Print to PDF"
 <p>值得注意的是<code class="docutils literal notranslate"><span class="pre">pixel_color</span></code>函数，它仅仅绘制了一个像素的颜色，而不关心周围像素的绘制情况。我们可以很好的利用并行处理的方式来对每一个像素并行计算颜色并绘制。</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">multiprocessing</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 
 <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
 <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
@@ -492,10 +492,9 @@ title="Print to PDF"
 <span class="k">def</span> <span class="nf">pixel_color</span><span class="p">(</span><span class="n">uv</span><span class="p">):</span>
   <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">()</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
-  <span class="n">coords</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">%</span><span class="k">w</span>/h, i//w/w) for i in range(w * h)]
-  <span class="n">pixels</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">pixel_color</span><span class="p">,</span> <span class="n">coords</span><span class="p">)</span>
-  <span class="n">image</span><span class="o">.</span><span class="n">putdata</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">%</span><span class="k">w</span>/h, i//w/w) for i in range(w * h)]
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">8</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">pixel_color</span><span class="p">)(</span><span class="n">uv</span><span class="p">)</span> <span class="k">for</span> <span class="n">uv</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">)</span>
+<span class="n">image</span><span class="o">.</span><span class="n">putdata</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
 
 <span class="n">display</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 </pre></div>
@@ -505,7 +504,7 @@ title="Print to PDF"
 <img alt="_images/01-color_11_0.png" src="_images/01-color_11_0.png" />
 </div>
 </div>
-<p>我们这里利用<code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>库创建多线程任务，并行绘制了同一张图片。<code class="docutils literal notranslate"><span class="pre">pixel_color</span></code>我们称之为像素着色器，在 GPU 上，正是借助了 GPU 并行计算的能力，成千上万的像素着色器在同步执行，这也是 GPU 能快速绘制图片的原因。</p>
+<p>我们这里利用<code class="docutils literal notranslate"><span class="pre">joblib</span></code>库创建多线程任务，并行绘制了同一张图片。<code class="docutils literal notranslate"><span class="pre">pixel_color</span></code>我们称之为像素着色器，在 GPU 上，正是借助了 GPU 并行计算的能力，成千上万的像素着色器在同步执行，这也是 GPU 能快速绘制图片的原因。</p>
 </section>
 <section id="id3">
 <h2>像素着色器的魔法<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
@@ -516,7 +515,7 @@ title="Print to PDF"
 </section>
 <section id="id4">
 <h2>小结<a class="headerlink" href="#id4" title="Permalink to this headline">#</a></h2>
-<p>本章节中，我们介绍了图片和颜色的格式，并且通过 C++ 生成了简单的图片。在我们正式进入到渲染管线之前，我们都会通过图片的形式来演示光栅化的过程。</p>
+<p>本章节中，我们介绍了图片和颜色的格式，并且通过 Python 生成了简单的图片。在我们正式进入到渲染管线之前，我们都会通过图片的形式来演示光栅化的过程。</p>
 <p>我们还引出了屏幕空间的概念，在本章节的屏幕坐标系中，是一个仅有二维坐标，并且取值范围在<code class="docutils literal notranslate"><span class="pre">[0,1]</span></code>的空间。</p>
 <p>紧接着，我们讨论了着色过程和像素着色器。像素着色器真正揭示了 GPU 的并行原理。因为每个像素着色器互不依赖，因此 GPU 才可以同时计算每个像素的颜色。</p>
 <p>整个图形学研究的内容就是如何快速地，更逼真地对场景完成整个着色过程。下一章节，我们将从最简单的几何图形出发，为我们的渲染器增加图元渲染的能力。</p>
