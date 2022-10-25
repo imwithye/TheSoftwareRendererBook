@@ -347,6 +347,16 @@ title="Print to PDF"
    线段的参数方程绘制
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   像素空间绘制
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bresenham">
+   Bresenham 直线算法
+  </a>
+ </li>
 </ul>
 
     </nav>
@@ -369,6 +379,16 @@ title="Print to PDF"
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#id2">
    线段的参数方程绘制
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id3">
+   像素空间绘制
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#bresenham">
+   Bresenham 直线算法
   </a>
  </li>
 </ul>
@@ -439,6 +459,115 @@ y = \vec{L}*t + (x_1,y_1)
 </div>
 </div>
 <p>很显然，对于这个算法，我们必须精确控制参数<code class="docutils literal notranslate"><span class="pre">t</span></code>的取值，才能得到完整的，同时又不过多绘制的线段。</p>
+</section>
+<section id="id3">
+<h2>像素空间绘制<a class="headerlink" href="#id3" title="Permalink to this headline">#</a></h2>
+<p>我们首先尝试解决第一个问题，如何避免参数<code class="docutils literal notranslate"><span class="pre">t</span></code>的取值影响我们最后的呈现效果。</p>
+<p>从数学的角度出发，<code class="docutils literal notranslate"><span class="pre">t</span></code>的取值越小，我们获得的结果一定越精确，当我们用微分<span class="math notranslate nohighlight">\(dt\)</span>作为变化的时候，我们则可获得完整的连续的线段。另一方面，将数学定义的世界空间的线段转换成我们的图片的时候，最终的线段只会用有限个像素表达。由于线段是连续的，那么在其两个端点间，<span class="math notranslate nohighlight">\([x_1,x_2]\)</span>，每一个<code class="docutils literal notranslate"><span class="pre">x</span></code>一定有一个<code class="docutils literal notranslate"><span class="pre">y</span></code>相对应。而在像素层面上来说，<code class="docutils literal notranslate"><span class="pre">x</span></code>的取值个数是有限的，因此我们可以用如下方式绘制：</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="n">px1</span><span class="p">,</span> <span class="n">px2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">py1</span><span class="p">,</span> <span class="n">py2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">px1</span>
+    <span class="k">while</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">px2</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">px1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">px2</span> <span class="o">-</span> <span class="n">px1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">py2</span> <span class="o">-</span> <span class="n">py1</span><span class="p">)</span> <span class="o">+</span> <span class="n">py1</span><span class="p">)</span>
+        <span class="n">img</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">color</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02-line_7_0.png" src="_images/02-line_7_0.png" />
+</div>
+</div>
+<p>在像素空间进行计算和绘制，我们确保了取值范围内的横向的每一个<code class="docutils literal notranslate"><span class="pre">x</span></code>都有一个<code class="docutils literal notranslate"><span class="pre">y</span></code>与之相对应。并且更重要的是，这意味着线段在横轴上的投影一定是连续的。然而，线段在纵轴上的投影却并非如此。</p>
+<p>当前，线段的斜率为 1，我们试着绘制两根额外的线段，绿色的线段斜率小于 1，蓝色的线段斜率大于 1。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.96</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02-line_9_0.png" src="_images/02-line_9_0.png" />
+</div>
+</div>
+<p>我们可以发现，红色和绿色的线段可以被连续的绘制，然而黄色的线段却出现了明显的断点。这是因为当斜率大于 1 时，线段的横轴的投影是连续的，然而线段的纵轴的投影却不连续。从像素层面解释，高度的像素的个数大于宽度的像素个数，如果我们还是依旧宽度进行采样，显然不能覆盖所有的高度像素。一个简单的解决方案是，当斜率大于 1 时，以高度作为循环进行采样，当斜率小于 1 时，以宽度作为循环进行采样。</p>
+</section>
+<section id="bresenham">
+<h2>Bresenham 直线算法<a class="headerlink" href="#bresenham" title="Permalink to this headline">#</a></h2>
+<p>经过我们上一轮的改进，我们已经能够绘制基本的线段。但是我们的算法还有没有改进的余地，让绘制的效率变得更高呢？</p>
+<p>首先我们观察循环中的两次运算</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">px1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">px2</span> <span class="o">-</span> <span class="n">px1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">py2</span> <span class="o">-</span> <span class="n">py1</span><span class="p">)</span> <span class="o">+</span> <span class="n">py1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>当我们求系数<code class="docutils literal notranslate"><span class="pre">t</span></code>的时候，用到了浮点除法，而大量的浮点运算无疑会降低绘制的效率。将浮点运算转换成整数运算，将除法运算转换成加法和减法运算能有效提高绘制效率。</p>
+<p>这里我们将介绍著名的 Bresenham 直线算法。Bresenham 直线绘制算法由 Jack Elton Bresenham 于 1962 年在 IBM 工作时发明。由于算法简单易懂，并且绘制效率高效成为线段绘制的标准算法。</p>
+<p>我们再来回顾一下线段的绘制过程。</p>
+<p>我们从线段的一个端点出发，假使线段斜率小于等于 1，且用横坐标扫描的方式进行绘制（对于斜率大于 1 的线段，我们可以通过纵坐标扫描的形式进行。由于算法是对称的，这里假定横坐标扫描），对于线段两个端点中的每一个<code class="docutils literal notranslate"><span class="pre">x</span></code>，都可以计算出一个<code class="docutils literal notranslate"><span class="pre">y</span></code>坐标。<strong>由于线段的斜率小于等于 1，任意两个相邻的<code class="docutils literal notranslate"><span class="pre">x</span></code>，其对应的<code class="docutils literal notranslate"><span class="pre">y</span></code>要么相等，要么相差 1</strong>。</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>
+    <span class="c1"># 将屏幕坐标转换到像素空间</span>
+    <span class="n">p1i</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">p2i</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    
+    <span class="c1"># 如果斜率大于1，我们将x和y交换，从而统一为横扫描</span>
+    <span class="n">steep</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p1i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p1i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">p1i</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p1i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">p2i</span> <span class="o">=</span> <span class="p">(</span><span class="n">p2i</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">steep</span> <span class="o">=</span> <span class="kc">True</span>
+    
+    <span class="c1"># 如果p1点在p2点的右侧，则交换两点，从而统一为从左到右扫描</span>
+    <span class="k">if</span> <span class="n">p1i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">p1i</span><span class="p">,</span> <span class="n">p2i</span> <span class="o">=</span> <span class="n">p2i</span><span class="p">,</span> <span class="n">p1i</span>
+    
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">derror</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dy</span> <span class="o">/</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">p1i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p1i</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">steep</span><span class="p">:</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">),</span> <span class="n">color</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">putpixel</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">),</span> <span class="n">color</span><span class="p">)</span>
+        <span class="c1"># 当x步进一格，累积一次error，如果error超过0.5，意味着y需要步进一格</span>
+        <span class="n">error</span> <span class="o">+=</span> <span class="n">derror</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="c1"># 如果斜率为正，则向上步进，否则向下步进</span>
+            <span class="n">y</span> <span class="o">+=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">p2i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">p1i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="c1"># error-1，重置一个像素偏移，重新计算累积error</span>
+            <span class="n">error</span> <span class="o">-=</span> <span class="mi">1</span>
+
+<span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">draw_line</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.96</span><span class="p">),</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/02-line_12_0.png" src="_images/02-line_12_0.png" />
+</div>
+</div>
+<p>运行上述程序，我们得到完美的线段渲染。</p>
 </section>
 </section>
 

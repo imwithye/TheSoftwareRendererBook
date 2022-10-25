@@ -407,10 +407,10 @@ y = \vec{L}*t + (x_1,y_1)
 </pre></div>
 </div>
 <p>编译并运行上面的代码，得到</p>
-<p><img alt="Line 0.01" src="_images/line-0.01.png" /></p>
+<p><img alt="Line 0.01" src="assets/02-line/line-0.01.png" /></p>
 <p>我们观察到<code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(auto</span> <span class="pre">t</span> <span class="pre">=</span> <span class="pre">0.0f;</span> <span class="pre">t</span> <span class="pre">&lt;=</span> <span class="pre">1.0f;</span> <span class="pre">t</span> <span class="pre">+=</span> <span class="pre">step)</span></code>这一层循环。由于计算机只能表示离散地数列，而无法表示连续的取值范围，我们只能通过一个极小数，0.01，的步进来拟合连续的表达。如果我们把这一个步进的步长取得过小，则会大幅度增加计算机的计算负担，实际上，当步长过小时，而我们整张图片的大小却只有 200x200 像素，这就意味着，每一小步增长甚至没有超出一个像素，那么有大量的像素被重新计算和重新着色。</p>
 <p>如果我们将步长取得过大，那么线段则会发生断裂的现象。</p>
-<p><img alt="Line 0.02" src="_images/line-0.02.png" /></p>
+<p><img alt="Line 0.02" src="assets/02-line/line-0.02.png" /></p>
 <p>很显然，对于这个算法，我们必须精确控制参数<code class="docutils literal notranslate"><span class="pre">t</span></code>的取值，才能得到完整的，同时又不过多绘制的线段。</p>
 </section>
 <section id="id3">
@@ -436,7 +436,7 @@ y = \vec{L}*t + (x_1,y_1)
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
-<p><img alt="Line Pixel Space" src="_images/line-pixel-space.png" /></p>
+<p><img alt="Line Pixel Space" src="assets/02-line/line-pixel-space.png" /></p>
 <p>在像素空间进行计算和绘制，我们确保了取值范围内的横向的每一个<code class="docutils literal notranslate"><span class="pre">x</span></code>都有一个<code class="docutils literal notranslate"><span class="pre">y</span></code>与之相对应。并且更重要的是，这意味着线段在横轴上的投影一定是连续的。然而，线段在纵轴上的投影却并非如此。</p>
 <p>当前，线段的斜率为 1，我们试着绘制两根额外的线段，绿色的线段斜率小于 1，蓝色的线段斜率大于 1。</p>
 <div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// 斜率等于1</span>
@@ -447,7 +447,7 @@ y = \vec{L}*t + (x_1,y_1)
 <span class="n">DrawLine</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.2f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.2f</span><span class="p">),</span><span class="w"> </span><span class="n">Vector2f</span><span class="p">(</span><span class="mf">0.6f</span><span class="p">,</span><span class="w"> </span><span class="mf">0.96f</span><span class="p">),</span><span class="w"> </span><span class="n">Color</span><span class="o">::</span><span class="n">Blue</span><span class="p">());</span><span class="w"></span>
 </pre></div>
 </div>
-<p><img alt="Line Pixel Space 2" src="_images/line-pixel-space-2.png" /></p>
+<p><img alt="Line Pixel Space 2" src="assets/02-line/line-pixel-space-2.png" /></p>
 <p>我们可以发现，红色和绿色的线段可以被连续的绘制，然而蓝色的线段却出现了明显的断点。这是因为当斜率大于 1 时，线段的横轴的投影是连续的，然而线段的纵轴的投影却不连续。从像素层面解释，高度的像素的个数大于宽度的像素个数，如果我们还是依旧宽度进行采样，显然不能覆盖所有的高度像素。一个简单的解决方案是，当斜率大于 1 时，以高度作为循环进行采样，当斜率小于 1 时，以宽度作为循环进行采样。</p>
 </section>
 <section id="bresenham">
@@ -513,7 +513,7 @@ y = \vec{L}*t + (x_1,y_1)
 </pre></div>
 </div>
 <p>编译运行上述程序，我们得到完美的线段渲染。</p>
-<p><img alt="Bresenham" src="_images/bresenham.png" /></p>
+<p><img alt="Bresenham" src="assets/02-line/bresenham.png" /></p>
 </section>
 </section>
 
