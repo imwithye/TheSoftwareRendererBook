@@ -574,7 +574,7 @@ u\overrightarrow{AB} + v\overrightarrow{AC} + 1 * \overrightarrow{PA} = \overrig
     <span class="c1"># 将最后一位设为1</span>
     <span class="n">v3</span> <span class="o">/=</span> <span class="n">v3</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">i</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">v3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">v3</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v3</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v3</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="ow">not</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="ow">not</span><span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">u</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -610,6 +610,7 @@ u\overrightarrow{AB} + v\overrightarrow{AC} + 1 * \overrightarrow{PA} = \overrig
 <img alt="_images/03-triangle_12_0.png" src="_images/03-triangle_12_0.png" />
 </div>
 </div>
+<p>至此，我们便利用包围盒优化和三角形测试算法，绘制出了我们想要的三角形。</p>
 </section>
 </section>
 
