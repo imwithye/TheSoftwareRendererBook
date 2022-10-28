@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>软件光栅渲染器 &#8212; 软件光栅渲染器</title>
+    <title>缓冲区，贴图和采样 &#8212; 软件光栅渲染器</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -52,7 +52,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script async="async" src="_static/sphinx-thebe.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="前言" href="00-preface.html" />
+    <link rel="prev" title="三角形绘制" href="03-triangle.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -106,13 +106,13 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="bd-toc-item active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="README.html">
                     软件光栅渲染器
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="00-preface.html">
    前言
@@ -133,8 +133,8 @@ const thebe_selector_output = ".output, .cell_output"
    三角形绘制
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="04-buffer.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    缓冲区，贴图和采样
   </a>
  </li>
@@ -189,6 +189,35 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/imwithye/TheSoftwareRendererBook/master?urlpath=tree/04-buffer.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -228,7 +257,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/imwithye/TheSoftwareRendererBook/issues/new?title=Issue%20on%20page%20%2FREADME.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/imwithye/TheSoftwareRendererBook/issues/new?title=Issue%20on%20page%20%2F04-buffer.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -256,7 +285,7 @@ title="Open an issue"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/README.md"
+        <a href="_sources/04-buffer.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -267,7 +296,7 @@ title="Download source file"
 <span class="headerbtn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.md</span>
+<span class="headerbtn__text-container">.ipynb</span>
 </a>
 
       </li>
@@ -293,60 +322,23 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
-</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
-   授权和协议
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>软件光栅渲染器</h1>
+                <h1>缓冲区，贴图和采样</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#id2">
-   授权和协议
-  </a>
- </li>
-</ul>
-
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -355,26 +347,8 @@ title="Print to PDF"
               <div>
                 
   <section class="tex2jax_ignore mathjax_ignore" id="id1">
-<h1>软件光栅渲染器<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h1>
-<p><a class="reference external" href="https://github.com/imwithye/TheSoftwareRendererBook"><img alt="Jupyter Book Badge" src="https://jupyterbook.org/badge.svg" /></a></p>
-<p>本作本基于 <a class="reference external" href="https://jupyterbook.org/">Jupyter Book</a> 创作和排版。</p>
-<section id="id2">
-<h2>授权和协议<a class="headerlink" href="#id2" title="Permalink to this headline">#</a></h2>
-<p>本作品基于 <a class="reference external" href="https://creativecommons.org/licenses/by-sa/4.0/">Attribution-ShareAlike 4.0 International，CC-BY-SA-4.0</a> 协议授权。</p>
-<p>您可以自由地：</p>
-<ul class="simple">
-<li><p>共享 — 在任何媒介以任何形式复制、发行本作品。</p></li>
-<li><p>演绎 — 修改、转换或以本作品为基础进行创作在任何用途下，甚至商业目的。</p></li>
-</ul>
-<p>只要你遵守许可协议条款，许可人就无法收回你的这些权利：</p>
-<ul class="simple">
-<li><p>署名 —— 您必须给出适当的署名，提供指向本许可协议的链接，同时标明是否（对原始作品）作了修改。您可以用任何合理的方式来署名，但是不得以任何方式暗示许可人为您或您的使用背书。</p></li>
-<li><p>保持协议 —— 为了让更多的人接触到本书，您的修改必须基于 CC-BY-SA-4.0 发布。</p></li>
-<li><p>没有附加限制 —— 您不得使用法律术语或者技术措施从而限制其他人做许可协议允许的事情。</p></li>
-</ul>
-</section>
-<div class="toctree-wrapper compound">
-</div>
+<h1>缓冲区，贴图和采样<a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h1>
+<p>在前三章中，我们频繁使用了<code class="docutils literal notranslate"><span class="pre">Image</span></code>输出我们的最终结果，由于屏幕空间和像素空间坐标系的关系，我们频繁进行坐标系转换以及上下轴翻转，在这一章中，我们对此项操作进行统一和封装，以便于我们在后续的渲染过程中能更好的管理资源。</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -404,12 +378,12 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="00-preface.html" title="next page">
-    <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">前言</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+    <a class='left-prev' id="prev-link" href="03-triangle.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">三角形绘制</p>
+        </div>
     </a>
 </div>
             </footer>
