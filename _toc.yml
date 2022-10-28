@@ -8,3 +8,4 @@ chapters:
   - file: 01-color
   - file: 02-line
   - file: 03-triangle
+  - file: 04-buffer
